@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BibliothequeAPI.Models
+namespace API.Models
 {
     [Table("Utilisateurs")]
     public class Utilisateur
@@ -11,20 +10,18 @@ namespace BibliothequeAPI.Models
         public int Id_Utilisateurs { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string Nom { get; set; }
+        [MaxLength(50)]
+        public string Nom { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(50)]
-        public string Prenom { get; set; }
+        [MaxLength(50)]
+        public string Prenom { get; set; } = string.Empty;
 
         [Required]
         public int Id_Roles { get; set; }
 
         [ForeignKey("Id_Roles")]
-        public virtual Role Role { get; set; }
+        public Role? Role { get; set; }
 
-        public virtual ICollection<Emprunt> Emprunts { get; set; }
-        public virtual ICollection<Retour> Retours { get; set; }
     }
 }

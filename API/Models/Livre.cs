@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BibliothequeAPI.Models
+namespace API.Models
 {
     [Table("Livres")]
     public class Livre
@@ -12,12 +10,11 @@ namespace BibliothequeAPI.Models
         public int Id_Livres { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string Nom { get; set; }
+        [MaxLength(100)]
+        public string Nom { get; set; } = string.Empty;
 
         [Required]
-        [Column("Année")]
-        public int Annee { get; set; }
+        public DateTime Annee { get; set; }
 
         [Required]
         public int Id_Auteurs { get; set; }
@@ -26,11 +23,10 @@ namespace BibliothequeAPI.Models
         public int Id_Genres { get; set; }
 
         [ForeignKey("Id_Auteurs")]
-        public virtual Auteur Auteur { get; set; }
+        public Auteur? Auteur { get; set; }
 
         [ForeignKey("Id_Genres")]
-        public virtual Genre Genre { get; set; }
+        public Genre? Genre { get; set; }
 
-        public virtual ICollection<Stock> Stocks { get; set; }
     }
 }
