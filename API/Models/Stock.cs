@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BibliothequeAPI.Models
+namespace API.Models
 {
-    [Table("Stock")]
+    [Table("Stocks")]
     public class Stock
     {
         [Key]
@@ -16,11 +15,7 @@ namespace BibliothequeAPI.Models
         [Required]
         public int Id_Livres { get; set; }
 
-        // Navigation properties
         [ForeignKey("Id_Livres")]
-        public virtual Livre Livre { get; set; }
-
-        public virtual ICollection<Emprunt> Emprunts { get; set; }
-        public virtual ICollection<Retour> Retours { get; set; }
+        public Livre? Livre { get; set; }
     }
 }

@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BibliothequeAPI.Models
+namespace API.Models
 {
     [Table("Emprunts")]
     public class Emprunt
@@ -11,11 +10,7 @@ namespace BibliothequeAPI.Models
         public int Id_Emprunts { get; set; }
 
         [Required]
-        [Column("date_emprunt")]
-        public DateTime DateEmprunt { get; set; }
-
-        [Required]
-        public int Nb { get; set; }
+        public DateTime Date { get; set; }  
 
         [Required]
         public int Id_Stock { get; set; }
@@ -24,9 +19,9 @@ namespace BibliothequeAPI.Models
         public int Id_Utilisateurs { get; set; }
 
         [ForeignKey("Id_Stock")]
-        public virtual Stock Stock { get; set; }
+        public Stock? Stock { get; set; }
 
         [ForeignKey("Id_Utilisateurs")]
-        public virtual Utilisateur Utilisateur { get; set; }
+        public Utilisateur? Utilisateur { get; set; }
     }
 }

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BibliothequeAPI.Models
+namespace API.Models
 {
     [Table("Roles")]
     public class Role
@@ -11,10 +10,7 @@ namespace BibliothequeAPI.Models
         public int Id_Roles { get; set; }
 
         [Required]
-        [StringLength(50)]
-        public string Nom { get; set; }
-
-        // Navigation property
-        public virtual ICollection<Utilisateur> Utilisateurs { get; set; }
+        [MaxLength(50)]
+        public string Nom { get; set; } = string.Empty;
     }
 }
