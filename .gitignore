@@ -1,37 +1,15 @@
-# Visual Studio
-.vs/
+# Build folders
+**/bin/
+**/obj/
+
+# User-specific files
 *.user
 *.suo
+*.cache
 
-# Build
-bin/
-obj/
-Debug/
-Release/
-
-# Packages
-packages/
-*.nupkg
-
-# Logs
-*.log
-logs/
-
-# Database
-*.mdf
-*.ldf
-
-# Configuration sensible
-appsettings.Development.json
-appsettings.Local.json
-*.env
-
-# Node modules (si vous utilisez npm)
-node_modules/
-
-# Uploads
-wwwroot/uploads/
-
-# Fichiers système
-.DS_Store
-Thumbs.db
+# NuGet
+project.lock.json
+project.fragment.lock.json
+*.nuget.props
+*.nuget.targets
+*.nuget.cache
