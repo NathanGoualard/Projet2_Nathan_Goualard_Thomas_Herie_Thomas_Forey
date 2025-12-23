@@ -1,0 +1,37 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build
+bin/
+obj/
+Debug/
+Release/
+
+# Packages
+packages/
+*.nupkg
+
+# Logs
+*.log
+logs/
+
+# Database
+*.mdf
+*.ldf
+
+# Configuration sensible
+appsettings.Development.json
+appsettings.Local.json
+*.env
+
+# Node modules (si vous utilisez npm)
+node_modules/
+
+# Uploads
+wwwroot/uploads/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
