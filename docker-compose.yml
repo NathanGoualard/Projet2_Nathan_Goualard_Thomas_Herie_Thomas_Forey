@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: bibliotheque_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: bibliotheque
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./BDD:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    networks:
+      - bibliotheque_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: bibliotheque_api
+    depends_on:
+      mysql:
+        condition: service_healthy
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mysql;Database=bibliotheque;User=root;Password=root_password;
+    networks:
+      - bibliotheque_network
+
+volumes:
+  mysql_data:
+
+networks:
+  bibliotheque_network:
+    driver: bridge
