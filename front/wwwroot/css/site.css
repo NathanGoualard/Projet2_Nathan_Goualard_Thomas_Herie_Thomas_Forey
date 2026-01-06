@@ -4,10 +4,24 @@ html {
 
 :root {
   --bs-body-bg: #fbe6d8 !important;
+  --secondary: #ffac79;
 }
 
-.navbar-color {
-   background-color: #ffac79 !important;
+input::placeholder {
+  font-weight: bold;
+}
+
+.card {
+  border-color: var(--secondary);
+  border-width: thick;
+}
+
+input.grey {
+  background-color: #e2e1e1;
+}
+
+.secondary-color {
+   background-color: var(--secondary) !important;
 }
 
 @media (min-width: 768px) {

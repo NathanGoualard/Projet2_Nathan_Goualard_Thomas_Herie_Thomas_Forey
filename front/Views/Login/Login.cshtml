@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<div class="container d-flex justify-content-center">
+<div class="col-11 col-sm-8 col-md-6 col-lg-5">
+<div class="card shadow-sm p-4 text-white">
+<div class="text-center">
+    <h1 class="text-dark">Authentification</h1>
+    <form action="/login" method="POST">
+         <div class="form-group mb-3">
+              <label for="username" class="form-label text-dark">Nom d'utilisateur</label>
+                   <input type="text" class="form-control grey" id="username" name="username" placeholder="Nom d'Utilisateur" required>
+         </div>
+         <div class="form-group mb-3">
+              <label for="password" class="form-label text-dark">Mot de passe</label>
+                  <input type="password" class="form-control grey" id="password" name="password" placeholder="Mot de passe" required>
+         </div>
+         <button type="submit" class="btn btn-warning rounded-pill w-100 btn-hover">Se connecter</button>
+    </form>
+</div>
+</div>
+</div>
+</div>
