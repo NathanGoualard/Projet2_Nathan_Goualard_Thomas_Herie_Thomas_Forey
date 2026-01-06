@@ -2,6 +2,14 @@ html {
   font-size: 14px;
 }
 
+:root {
+  --bs-body-bg: #fbe6d8 !important;
+}
+
+.navbar-color {
+   background-color: #ffac79 !important;
+}
+
 @media (min-width: 768px) {
   html {
     font-size: 16px;
