@@ -30,5 +30,10 @@ app.MapControllerRoute(
     pattern:"{controller=Login}/{action=Login}"
 ).WithStaticAssets();
 
+app.MapControllerRoute(
+    name: "dashboard",
+    pattern:"{controller=Dashboard}/{action=Dashboard}"
+).WithStaticAssets();
+
 
 app.Run();

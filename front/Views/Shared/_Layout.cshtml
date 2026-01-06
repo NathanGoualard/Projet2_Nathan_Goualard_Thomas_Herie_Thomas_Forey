@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+var year = DateTime.Now.Year;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,7 +30,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Accueil</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="">Tableau de Bord</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="">Connexion</a>
                         </li>
                     </ul>
                 </div>
@@ -41,7 +48,7 @@
 
     <footer class="border-top footer text-muted secondary-color">
         <div class="container">
-            &copy; 2026 - Bibliothèque - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @year - Bibliothèque
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

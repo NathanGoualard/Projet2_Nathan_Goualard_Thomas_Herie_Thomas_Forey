@@ -20,6 +20,10 @@ input.grey {
   background-color: #e2e1e1;
 }
 
+input.grey:focus {
+  background-color: #b9b9b9;
+}
+
 .secondary-color {
    background-color: var(--secondary) !important;
 }
