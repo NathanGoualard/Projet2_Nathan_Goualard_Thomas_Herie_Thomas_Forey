@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS Livres(
    FOREIGN KEY(Id_Genres) REFERENCES Genres(Id_Genres)
 );
 
-CREATE TABLE IF NOT EXISTS Stock(
+CREATE TABLE IF NOT EXISTS Stock(  
    Id_Stock INT AUTO_INCREMENT,
    Nb INT,
    Id_Livres INT NOT NULL,
@@ -39,14 +39,18 @@ CREATE TABLE IF NOT EXISTS Stock(
    FOREIGN KEY(Id_Livres) REFERENCES Livres(Id_Livres)
 );
 
+
 CREATE TABLE IF NOT EXISTS Utilisateurs(
    Id_Utilisateurs INT AUTO_INCREMENT,
    Nom VARCHAR(50),
    Prenom VARCHAR(50),
+   Login VARCHAR(50) NOT NULL UNIQUE,
+   MotDePasse VARCHAR(255) NOT NULL, 
    Id_Roles INT NOT NULL,
    PRIMARY KEY(Id_Utilisateurs),
    FOREIGN KEY(Id_Roles) REFERENCES Roles(Id_Roles)
 );
+
 
 CREATE TABLE IF NOT EXISTS Retours(
    Id_Retours INT AUTO_INCREMENT,

@@ -1,116 +1,194 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using API.Data;
 using API.Models;
+using System.Security.Cryptography;
+using System.Text;
+
+string HashPassword(string password)
+{
+    using var sha256 = SHA256.Create();
+    var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+    return Convert.ToBase64String(hashedBytes);
+}
 
 var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = "Server=mysql;Port=3306;Database=bibliotheque;User=root;Password=root_password;";
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
-    try
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    var retryCount = 0;
+    while (retryCount < 30)
     {
-        var context = services.GetRequiredService<ApplicationDbContext>();
-
-        context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-
-        if (!context.Auteurs.Any())
+        try
         {
-            var auteurs = new List<Auteur>
-            {
-                new Auteur { Nom = "Hugo", Prenom = "Victor" },
-                new Auteur { Nom = "Zola", Prenom = "Émile" },
-                new Auteur { Nom = "Dumas", Prenom = "Alexandre" },
-                new Auteur { Nom = "Verne", Prenom = "Jules" },
-                new Auteur { Nom = "Balzac", Prenom = "Honoré" }
-            };
-            context.Auteurs.AddRange(auteurs);
-            context.SaveChanges();
-
-            var genres = new List<Genre>
-            {
-                new Genre { Nom = "Roman" },
-                new Genre { Nom = "Science-Fiction" },
-                new Genre { Nom = "Aventure" },
-                new Genre { Nom = "Poésie" },
-                new Genre { Nom = "Théâtre" }
-            };
-            context.Genres.AddRange(genres);
-            context.SaveChanges();
-
-            var roles = new List<Role>
-            {
-                new Role { Nom = "Administrateur" },
-                new Role { Nom = "Bibliothécaire" },
-                new Role { Nom = "Lecteur" }
-            };
-            context.Roles.AddRange(roles);
-            context.SaveChanges();
-
-            var livres = new List<Livre>
-            {
-                new Livre { Nom = "Les Misérables", Annee = new DateTime(1862, 1, 1), Id_Auteurs = 1, Id_Genres = 1 },
-                new Livre { Nom = "Notre-Dame de Paris", Annee = new DateTime(1831, 1, 1), Id_Auteurs = 1, Id_Genres = 1 },
-                new Livre { Nom = "Germinal", Annee = new DateTime(1885, 1, 1), Id_Auteurs = 2, Id_Genres = 1 },
-                new Livre { Nom = "Le Comte de Monte-Cristo", Annee = new DateTime(1844, 1, 1), Id_Auteurs = 3, Id_Genres = 3 },
-                new Livre { Nom = "Les Trois Mousquetaires", Annee = new DateTime(1844, 1, 1), Id_Auteurs = 3, Id_Genres = 3 },
-                new Livre { Nom = "Vingt Mille Lieues sous les mers", Annee = new DateTime(1870, 1, 1), Id_Auteurs = 4, Id_Genres = 2 },
-                new Livre { Nom = "Le Tour du monde en 80 jours", Annee = new DateTime(1873, 1, 1), Id_Auteurs = 4, Id_Genres = 3 },
-                new Livre { Nom = "Le Père Goriot", Annee = new DateTime(1835, 1, 1), Id_Auteurs = 5, Id_Genres = 1 }
-            };
-            context.Livres.AddRange(livres);
-            context.SaveChanges();
-
-            var utilisateurs = new List<Utilisateur>
-            {
-                new Utilisateur { Nom = "Dupont", Prenom = "Jean", Id_Roles = 1 },
-                new Utilisateur { Nom = "Martin", Prenom = "Marie", Id_Roles = 2 },
-                new Utilisateur { Nom = "Bernard", Prenom = "Pierre", Id_Roles = 3 },
-                new Utilisateur { Nom = "Dubois", Prenom = "Sophie", Id_Roles = 3 },
-                new Utilisateur { Nom = "Thomas", Prenom = "Luc", Id_Roles = 3 }
-            };
-            context.Utilisateurs.AddRange(utilisateurs);
-            context.SaveChanges();
-
-            var stocks = new List<Stock>();
-            for (int i = 1; i <= livres.Count; i++)
-            {
-                stocks.Add(new Stock { Nb = Random.Shared.Next(1, 10), Id_Livres = i });
-            }
-            context.Stocks.AddRange(stocks);
-            context.SaveChanges();
-
-            var emprunts = new List<Emprunt>
-            {
-                new Emprunt { Date = DateTime.Now.AddDays(-10), Id_Stock = 1, Id_Utilisateurs = 3 },
-                new Emprunt { Date = DateTime.Now.AddDays(-5), Id_Stock = 2, Id_Utilisateurs = 4 },
-                new Emprunt { Date = DateTime.Now.AddDays(-3), Id_Stock = 3, Id_Utilisateurs = 5 }
-            };
-            context.Emprunts.AddRange(emprunts);
-            context.SaveChanges();
-
-            var retours = new List<Retour>
-            {
-                new Retour { Date = DateTime.Now.AddDays(-2), Id_Stock = 1, Id_Utilisateurs = 3 }
-            };
-            context.Retours.AddRange(retours);
-            context.SaveChanges();
-
+            context.Database.CanConnect();
+            break;
+        }
+        catch
+        {
+            retryCount++;
+            Thread.Sleep(1000);
         }
     }
-    catch (Exception ex)
+
+    context.Database.EnsureCreated();
+
+    if (!context.Roles.Any())
     {
-        Console.WriteLine($"Erreur: {ex.Message}");
+        var roles = new List<Role>
+        {
+            new Role { Nom = "Administrateur" },
+            new Role { Nom = "Bibliothécaire" },
+            new Role { Nom = "Utilisateur" }
+        };
+        context.Roles.AddRange(roles);
+        context.SaveChanges();
+    }
+
+    if (!context.Genres.Any())
+    {
+        var genres = new List<Genre>
+        {
+            new Genre { Nom = "Roman" },
+            new Genre { Nom = "Science-Fiction" },
+            new Genre { Nom = "Policier" },
+            new Genre { Nom = "Histoire" },
+            new Genre { Nom = "Biographie" }
+        };
+        context.Genres.AddRange(genres);
+        context.SaveChanges();
+    }
+
+    if (!context.Auteurs.Any())
+    {
+        var auteurs = new List<Auteur>
+        {
+            new Auteur { Nom = "Hugo", Prenom = "Victor" },
+            new Auteur { Nom = "Asimov", Prenom = "Isaac" },
+            new Auteur { Nom = "Christie", Prenom = "Agatha" },
+            new Auteur { Nom = "Tolstoï", Prenom = "Léon" },
+            new Auteur { Nom = "Mandela", Prenom = "Nelson" }
+        };
+        context.Auteurs.AddRange(auteurs);
+        context.SaveChanges();
+    }
+
+    if (!context.Livres.Any())
+    {
+        var livres = new List<Livre>
+        {
+            new Livre
+            {
+                Nom = "Les Misérables",
+                Annee = new DateTime(1862, 1, 1),
+                Id_Auteurs = 1,
+                Id_Genres = 1
+            },
+            new Livre
+            {
+                Nom = "Fondation",
+                Annee = new DateTime(1951, 1, 1),
+                Id_Auteurs = 2,
+                Id_Genres = 2
+            },
+            new Livre
+            {
+                Nom = "Le Crime de l'Orient-Express",
+                Annee = new DateTime(1934, 1, 1),
+                Id_Auteurs = 3,
+                Id_Genres = 3
+            },
+            new Livre
+            {
+                Nom = "Guerre et Paix",
+                Annee = new DateTime(1869, 1, 1),
+                Id_Auteurs = 4,
+                Id_Genres = 4
+            },
+            new Livre
+            {
+                Nom = "Un long chemin vers la liberté",
+                Annee = new DateTime(1994, 1, 1),
+                Id_Auteurs = 5,
+                Id_Genres = 5
+            }
+        };
+        context.Livres.AddRange(livres);
+        context.SaveChanges();
+    }
+
+    if (!context.Stocks.Any())
+    {
+        var stocks = new List<Stock>
+        {
+            new Stock { Nb = 5, Id_Livres = 1 },
+            new Stock { Nb = 3, Id_Livres = 2 },
+            new Stock { Nb = 7, Id_Livres = 3 },
+            new Stock { Nb = 2, Id_Livres = 4 },
+            new Stock { Nb = 4, Id_Livres = 5 }
+        };
+        context.Stocks.AddRange(stocks);
+        context.SaveChanges();
+    }
+
+    if (!context.Utilisateurs.Any())
+    {
+        var utilisateurs = new List<Utilisateur>
+        {
+            new Utilisateur
+            {
+                Nom = "Dupont",
+                Prenom = "Jean",
+                Login = "admin",
+                MotDePasse = HashPassword("admin123"),
+                Id_Roles = 1
+            },
+            new Utilisateur
+            {
+                Nom = "Martin",
+                Prenom = "Marie",
+                Login = "marie.martin",
+                MotDePasse = HashPassword("biblio123"),
+                Id_Roles = 2
+            },
+            new Utilisateur
+            {
+                Nom = "Bernard",
+                Prenom = "Pierre",
+                Login = "pierre.bernard",
+                MotDePasse = HashPassword("user123"),
+                Id_Roles = 3
+            },
+            new Utilisateur
+            {
+                Nom = "Dubois",
+                Prenom = "Sophie",
+                Login = "sophie.dubois",
+                MotDePasse = HashPassword("user123"),
+                Id_Roles = 3
+            },
+            new Utilisateur
+            {
+                Nom = "Thomas",
+                Prenom = "Luc",
+                Login = "luc.thomas",
+                MotDePasse = HashPassword("user123"),
+                Id_Roles = 3
+            }
+        };
+        context.Utilisateurs.AddRange(utilisateurs);
+        context.SaveChanges();
     }
 }
 
@@ -122,4 +200,5 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthorization();
 app.MapControllers();
+
 app.Run();

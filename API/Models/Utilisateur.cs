@@ -18,10 +18,16 @@ namespace API.Models
         public string Prenom { get; set; } = string.Empty;
 
         [Required]
+        [MaxLength(50)]
+        public string Login { get; set; } = string.Empty;
+
+        [Required]
+        public string MotDePasse { get; set; } = string.Empty;
+
+        [Required]
         public int Id_Roles { get; set; }
 
         [ForeignKey("Id_Roles")]
         public Role? Role { get; set; }
-
     }
 }
