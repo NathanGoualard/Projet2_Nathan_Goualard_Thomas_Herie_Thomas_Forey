@@ -1,0 +1,40 @@
+@model List<front.Models.Emprunt>
+
+@{
+    ViewData["Title"] = "Emprunts";
+}
+
+<h2>📋 Gestion des emprunts</h2>
+
+<a asp-action="Create" class="btn-add">➕ Nouvel emprunt</a>
+
+<table class="books-table">
+    <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Livre</th>
+            <th>Date d'emprunt</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    @foreach (var e in Model)
+    {
+        <tr>
+            <td>@e.Utilisateur.Prenom @e.Utilisateur.Nom</td>
+            <td>@e.Stock.Livre.Nom</td>
+            <td>@e.Date.ToShortDateString()</td>
+            <td>
+                <form asp-action="Retour"
+                      asp-route-id="@e.Id_Emprunts"
+                      method="post"
+                      onsubmit="return confirm('Confirmer le retour du livre ?');"
+                      style="display:inline;">
+                    <button type="submit" class="btn-return">🔁 Retour</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

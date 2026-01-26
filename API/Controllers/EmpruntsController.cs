@@ -16,7 +16,7 @@ namespace API.Controllers
             _context = context;
         }
 
-        // GET: api/emprunts
+    
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Emprunt>>> GetEmprunts()
         {
@@ -27,7 +27,7 @@ namespace API.Controllers
                 .ToListAsync();
         }
 
-        // GET: api/emprunts/5
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<Emprunt>> GetEmprunt(int id)
         {
@@ -45,7 +45,7 @@ namespace API.Controllers
             return emprunt;
         }
 
-        // POST: api/emprunts
+      
         [HttpPost]
         public async Task<ActionResult<Emprunt>> PostEmprunt(Emprunt emprunt)
         {
@@ -70,20 +70,23 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetEmprunt), new { id = emprunt.Id_Emprunts }, emprunt);
         }
 
-        // DELETE: api/emprunts/5
+       
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmprunt(int id)
         {
             var emprunt = await _context.Emprunts.FindAsync(id);
             if (emprunt == null)
-            {
                 return NotFound();
-            }
+
+            var stock = await _context.Stocks.FindAsync(emprunt.Id_Stock);
+            if (stock != null)
+                stock.Nb++; 
 
             _context.Emprunts.Remove(emprunt);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
     }
 }

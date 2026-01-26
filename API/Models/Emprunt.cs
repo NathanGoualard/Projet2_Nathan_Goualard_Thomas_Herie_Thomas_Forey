@@ -10,7 +10,8 @@ namespace API.Models
         public int Id_Emprunts { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }  
+        [Column("Date_")] 
+        public DateTime Date { get; set; }
 
         [Required]
         public int Id_Stock { get; set; }

@@ -16,7 +16,7 @@ namespace API.Controllers
             _context = context;
         }
 
-        // GET: api/retours
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Retour>>> GetRetours()
         {
@@ -27,7 +27,6 @@ namespace API.Controllers
                 .ToListAsync();
         }
 
-        // GET: api/retours/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Retour>> GetRetour(int id)
         {
@@ -45,7 +44,7 @@ namespace API.Controllers
             return retour;
         }
 
-        // POST: api/retours
+       
         [HttpPost]
         public async Task<ActionResult<Retour>> PostRetour(Retour retour)
         {
@@ -64,7 +63,6 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetRetour), new { id = retour.Id_Retours }, retour);
         }
 
-        // DELETE: api/retours/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRetour(int id)
         {

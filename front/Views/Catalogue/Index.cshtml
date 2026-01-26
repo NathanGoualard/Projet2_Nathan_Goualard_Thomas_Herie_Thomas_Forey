@@ -1,0 +1,53 @@
+@model List<front.Models.Livre>
+
+@{
+    ViewData["Title"] = "Catalogue";
+}
+
+<section class="new-releases">
+    <h3>Catalogue des livres</h3>
+
+    @if (Model.Count == 0)
+    {
+        <p>Aucun livre trouvé.</p>
+    }
+    else
+    {
+        <div class="books-container">
+            @foreach (var livre in Model)
+            {
+                <div class="book-card">
+                    <img src="~/images/book.png" alt="Couverture du livre" class="book-image" />
+
+                    <p class="book-title">
+                        <strong>@livre.Nom</strong>
+                    </p>
+
+                    <p class="book-author">
+                        @livre.Auteur.Prenom @livre.Auteur.Nom
+                    </p>
+
+                    <p class="book-genre">
+                        Genre : @livre.Genre.Nom
+                    </p>
+
+                    <p class="book-year">
+                        Année : @livre.Annee.Year
+                    </p>
+                    <p class="book-stock">
+                        Stock :
+                        @if (livre.Stock != null && livre.Stock.Nb > 0)
+                        {
+                            <strong>@livre.Stock.Nb disponible(s)</strong>
+                        }
+                        else
+                        {
+                            <strong style="color:red">Indisponible</strong>
+                        }
+                    </p>
+
+                </div>
+            }
+        </div>
+    }
+</section>

@@ -1,0 +1,47 @@
+@model front.Models.Emprunt
+
+@{
+    ViewData["Title"] = "Nouvel emprunt";
+}
+
+<h2>📘 Nouvel emprunt</h2>
+
+@if (ViewBag.Error != null)
+{
+    <p style="color:red">@ViewBag.Error</p>
+}
+
+<form method="post" style="max-width:500px; background:white; padding:20px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+
+    <label><strong>Utilisateur</strong></label>
+    <select asp-for="Id_Utilisateurs" required style="width:100%; padding:8px; margin-top:5px;">
+        <option value="">-- Choisir un utilisateur --</option>
+        @foreach (var u in ViewBag.Utilisateurs)
+        {
+            <option value="@u.Id_Utilisateurs">
+                @u.Prenom @u.Nom
+            </option>
+        }
+    </select>
+
+    <br /><br />
+
+    <label><strong>Livre disponible</strong></label>
+    <select asp-for="Id_Stock" required style="width:100%; padding:8px; margin-top:5px;">
+        <option value="">-- Choisir un livre --</option>
+        @foreach (var s in ViewBag.Stocks)
+        {
+            if (s.Nb > 0)
+            {
+                <option value="@s.Id_Stock">
+                    @s.Livre.Nom (Stock : @s.Nb)
+                </option>
+            }
+        }
+    </select>
+
+    <br /><br />
+
+    <button type="submit" class="btn-add">📥 Enregistrer</button>
+    <a asp-action="Index" style="margin-left:10px;">Annuler</a>
+</form>

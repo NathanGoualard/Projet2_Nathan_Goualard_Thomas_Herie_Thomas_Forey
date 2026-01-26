@@ -1,0 +1,40 @@
+@model front.Models.Livre
+
+<h2>Modifier un livre</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id_Livres" />
+
+    <label>Titre</label>
+    <input asp-for="Nom" required />
+
+    <label>Année</label>
+    <input asp-for="Annee" type="date" required />
+
+    <label>Auteur</label>
+    <select asp-for="Id_Auteurs" required>
+        @foreach (var auteur in ViewBag.Auteurs)
+        {
+            <option value="@auteur.Id_Auteurs"
+                    selected="@(auteur.Id_Auteurs == Model.Id_Auteurs)">
+                @auteur.Prenom @auteur.Nom
+            </option>
+        }
+    </select>
+
+    <label>Genre</label>
+    <select asp-for="Id_Genres" required>
+        @foreach (var genre in ViewBag.Genres)
+        {
+            <option value="@genre.Id_Genres"
+                    selected="@(genre.Id_Genres == Model.Id_Genres)">
+                @genre.Nom
+            </option>
+        }
+    </select>
+
+    <br /><br />
+    <button type="submit">Enregistrer</button>
+    <a asp-action="Index">Annuler</a>
+</form>

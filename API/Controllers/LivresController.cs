@@ -16,6 +16,7 @@ namespace API.Controllers
             _context = context;
         }
 
+    
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Livre>>> GetLivres()
         {
@@ -47,9 +48,19 @@ namespace API.Controllers
             _context.Livres.Add(livre);
             await _context.SaveChangesAsync();
 
+            var stock = new Stock
+            {
+                Id_Livres = livre.Id_Livres,
+                Nb = 5
+            };
+
+            _context.Stocks.Add(stock);
+            await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetLivre), new { id = livre.Id_Livres }, livre);
         }
 
+      
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLivre(int id, Livre livre)
         {
@@ -76,6 +87,7 @@ namespace API.Controllers
             return NoContent();
         }
 
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLivre(int id)
         {
@@ -83,6 +95,15 @@ namespace API.Controllers
             if (livre == null)
             {
                 return NotFound();
+            }
+
+            
+            var stock = await _context.Stocks
+                .FirstOrDefaultAsync(s => s.Id_Livres == id);
+
+            if (stock != null)
+            {
+                _context.Stocks.Remove(stock);
             }
 
             _context.Livres.Remove(livre);

@@ -48,10 +48,11 @@ using (var scope = app.Services.CreateScope())
     {
         var roles = new List<Role>
         {
-            new Role { Nom = "Administrateur" },
             new Role { Nom = "Bibliothécaire" },
-            new Role { Nom = "Utilisateur" }
+            new Role { Nom = "Étudiant" },
+            new Role { Nom = "Enseignant" }
         };
+
         context.Roles.AddRange(roles);
         context.SaveChanges();
     }
@@ -148,45 +149,48 @@ using (var scope = app.Services.CreateScope())
         {
             new Utilisateur
             {
-                Nom = "Dupont",
-                Prenom = "Jean",
-                Login = "admin",
-                MotDePasse = HashPassword("admin123"),
-                Id_Roles = 1
+                Nom = "Martin",
+                Prenom = "Sophie",
+                Login = "sophie.martin",
+                MotDePasse = HashPassword("biblio123"),
+                Id_Roles = 1 
             },
+    
             new Utilisateur
             {
-                Nom = "Martin",
-                Prenom = "Marie",
-                Login = "marie.martin",
-                MotDePasse = HashPassword("biblio123"),
-                Id_Roles = 2
+                Nom = "Dubois",
+                Prenom = "Lucas",
+                Login = "lucas.dubois",
+                MotDePasse = HashPassword("etudiant123"),
+                Id_Roles = 2 
             },
             new Utilisateur
             {
                 Nom = "Bernard",
+                Prenom = "Emma",
+                Login = "emma.bernard",
+                MotDePasse = HashPassword("etudiant123"),
+                Id_Roles = 2 
+            },
+    
+            new Utilisateur
+            {
+                Nom = "Lefebvre",
                 Prenom = "Pierre",
-                Login = "pierre.bernard",
-                MotDePasse = HashPassword("user123"),
+                Login = "pierre.lefebvre",
+                MotDePasse = HashPassword("enseignant123"),
                 Id_Roles = 3
             },
             new Utilisateur
             {
-                Nom = "Dubois",
-                Prenom = "Sophie",
-                Login = "sophie.dubois",
-                MotDePasse = HashPassword("user123"),
-                Id_Roles = 3
-            },
-            new Utilisateur
-            {
-                Nom = "Thomas",
-                Prenom = "Luc",
-                Login = "luc.thomas",
-                MotDePasse = HashPassword("user123"),
-                Id_Roles = 3
+                Nom = "Moreau",
+                Prenom = "Marie",
+                Login = "marie.moreau",
+                MotDePasse = HashPassword("enseignant123"),
+                Id_Roles = 3 
             }
         };
+
         context.Utilisateurs.AddRange(utilisateurs);
         context.SaveChanges();
     }

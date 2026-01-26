@@ -1,25 +1,39 @@
-using System.Diagnostics;
-using front.Models;
 using Microsoft.AspNetCore.Mvc;
+using front.Models;
+using front.Filters;
+using System.Net.Http.Json;
 
 namespace front.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        private readonly HttpClient _httpClient;
 
-        public IActionResult Privacy()
+        public HomeController(HttpClient httpClient)
         {
-            return View();
+            _httpClient = httpClient;
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [RoleAuthorize("Étudiant", "Enseignant", "Bibliothécaire")]
+        public async Task<IActionResult> Index()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var livres = await _httpClient.GetFromJsonAsync<List<Livre>>(
+                "http://localhost:5000/api/livres");
+
+            if (livres == null || livres.Count == 0)
+            {
+                ViewBag.Error = "Aucun livre disponible";
+                return View(new List<Livre>());
+            }
+
+            
+            var random = new Random();
+            var randomLivres = livres
+                .OrderBy(x => random.Next())
+                .Take(4)
+                .ToList();
+
+            return View(randomLivres);
         }
     }
 }
+

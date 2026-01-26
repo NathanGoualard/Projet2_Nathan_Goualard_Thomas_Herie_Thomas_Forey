@@ -1,0 +1,33 @@
+@model List<front.Models.Emprunt>
+
+@{
+    ViewData["Title"] = "Mes emprunts";
+}
+
+<h2>📚 Mes emprunts</h2>
+
+@if (!Model.Any())
+{
+    <p>Vous n’avez actuellement aucun emprunt.</p>
+}
+else
+{
+    <table class="books-table">
+        <thead>
+            <tr>
+                <th>Livre</th>
+                <th>Date d'emprunt</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Stock.Livre.Nom</td>
+                <td>@e.Date.ToShortDateString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,38 @@
+@model List<front.Models.Livre>
+
+<h2>Gestion des livres</h2>
+
+<a asp-action="Create" class="btn-add">➕ Ajouter un livre</a>
+
+<table class="books-table">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Genre</th>
+            <th>Année</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var livre in Model)
+        {
+            <tr>
+                <td>@livre.Nom</td>
+                <td>@livre.Auteur.Prenom @livre.Auteur.Nom</td>
+                <td>@livre.Genre.Nom</td>
+                <td>@livre.Annee.Year</td>
+                <td class="table-actions">
+                    <a asp-action="Edit"
+                       asp-route-id="@livre.Id_Livres"
+                       class="btn-edit">✏️</a>
+
+                    <a asp-action="Delete"
+                       asp-route-id="@livre.Id_Livres"
+                       class="btn-delete"
+                       onclick="return confirm('Supprimer ce livre ?');">❌</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

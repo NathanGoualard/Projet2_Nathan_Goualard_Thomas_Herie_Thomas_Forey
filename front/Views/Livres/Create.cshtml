@@ -1,0 +1,40 @@
+@model front.Models.Livre
+
+<h2>Ajouter un livre</h2>
+
+<form asp-action="Create" method="post">
+
+    <div asp-validation-summary="All" style="color:red"></div>
+
+    <label>Titre</label>
+    <input asp-for="Nom" required />
+
+    <label>Année</label>
+    <input asp-for="Annee" type="date" required />
+
+    <label>Auteur</label>
+    <select asp-for="Id_Auteurs" required>
+        <option value="">-- Choisir un auteur --</option>
+        @foreach (var auteur in ViewBag.Auteurs)
+        {
+            <option value="@auteur.Id_Auteurs">
+                @auteur.Prenom @auteur.Nom
+            </option>
+        }
+    </select>
+
+    <label>Genre</label>
+    <select asp-for="Id_Genres" required>
+        <option value="">-- Choisir un genre --</option>
+        @foreach (var genre in ViewBag.Genres)
+        {
+            <option value="@genre.Id_Genres">
+                @genre.Nom
+            </option>
+        }
+    </select>
+
+    <br /><br />
+    <button type="submit">Enregistrer</button>
+    <a asp-action="Index">Annuler</a>
+</form>
